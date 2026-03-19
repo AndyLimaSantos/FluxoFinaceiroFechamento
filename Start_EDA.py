@@ -54,7 +54,8 @@ incomeBase_filtro = pd.DataFrame(data = {'ID do pedido/ajuste':incomeBase['ID do
                                          'Valor total a ser liquidado':incomeBase['Valor total a ser liquidado'].astype(float),\
                                          'Data do demonstrativo':incomeBase['Data do demonstrativo']})
 #Escrevemos um novo banco de dados para o Export Order
-exportOrder_filtro = pd.DataFrame(data = {'Nº de Pedido da Plataforma':exportOrderBase['Nº de Pedido da Plataforma'].astype(str),\
+exportOrder_filtro = pd.DataFrame(data = {'Pós-venda/Cancelado/Devolvido':exportOrderBase['Pós-venda/Cancelado/Devolvido'].fillna("Ocorreu").astype(str),\
+                                          'Nº de Pedido da Plataforma':exportOrderBase['Nº de Pedido da Plataforma'].astype(str),\
                                           'Custo Médio':exportOrderBase['Custo Médio'].astype(float),\
                                           'SKU':exportOrderBase['SKU'],\
                                           'SKU (Armazém)':exportOrderBase['SKU (Armazém)']})

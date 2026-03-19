@@ -26,7 +26,7 @@ def insere_custo(custoUP, dataSKU):
         indice = dataSKU.loc[dataSKU['SKU'] == SKU_armazem].index #retorna o index do valor do sku encontrado  na planilha de sku2skuarmazem)
         if not indice.empty:
             valor = int(indice[0])
-            custoUP.loc[elementos_custo_nulo[i],"Custo Médio"] = dados_SKUArmazem.iloc[valor,'Custo Médio']
+            custoUP.loc[elementos_custo_nulo[i],"Custo Médio"] = dados_SKUArmazem.loc[valor,'Custo Médio']
         else:
             custoUP.loc[elementos_custo_nulo[i],"Custo Médio"] = 0
     return custoUP
