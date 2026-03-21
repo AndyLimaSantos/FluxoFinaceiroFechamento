@@ -4,6 +4,7 @@ Anotações sobre as aplicações:
 '''
 #Importação das nossas bibliotecas utilizadas no processo
 import pandas as pd
+from datetime import datetime
 
 #Funções que iremos utilizar para criação das novas colunas.
 def estimativa_taxa(todos_pedidos):
