@@ -142,5 +142,22 @@ def main():
     dataDevolucao = data_devolucao(data_todospedidos, data_devolucoes)
     #Produção do novo banco de dados com os indicadores que precisamos, 
     #para fazer o resumo que desejamos
+    ##Construção do Data frame.
+    Dados_vendas_final = pd.DataFrame(data = {"Order ID":data_todospedidos["Order ID"],\
+                                            "Estimativa de Taxa":estima_taxa["Estimativa de Taxa"],\
+                                            "Estimativa de Recebimento":estima_recebe["Estimativa de Recebimento"],\
+                                            "Custo Unitário":custo_uni["Custo Unitario"],\
+                                            "Lucro Estimado":lucro_estima["Lucro Estimado"],\
+                                            "Status":status["Status"],\
+                                            "Valor Real Depositado":valor_real_liquidado["Valor Real Depositado"],\
+                                            "Custo Total":custo_tot["Custo Total"],\
+                                            "Lucro Bruto Real":valor_lucro["Lucro Bruto Real"],\
+                                            "Margem de Lucro":lucro_margem["Margem de Lucro"],\
+                                            "Diferênça":diferenca_valor["Diferença"],\
+                                            "Data De Deposito":dataDeposito["Data de deposito"],\
+                                            "Mês de Recebimento":mesRecebimento["Mês de recebimento"],\
+                                            "Data de Devolução":dataDevolucao["Data de Devolução"]})
+    #Dados_vendas_final.to_excel("Dados de venda Final.xlsx")
+    Dados_vendas_final.to_csv("Dados de venda Final.csv")
 if __name__ == "__main__":
     main()
