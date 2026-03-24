@@ -36,6 +36,22 @@ A solução foi desenvolvida em Python com foco em automação, análise de dado
 - Matplotlib / Seaborn
 - APIs de e-commerce (atualmente esse é o que esta sendo estudado)
 
+## Estrutura do Projeto
+
+    📁 projeto-ecommerce-data
+    │
+    ├── 📁 data                             # Dados brutos e tratados
+    ├── 📁 notebooks                        # Análises exploratórias
+    ├── 📁 src                              # Código principal
+    │   ├── Start_EDA.py                    # Tratamento dos dados e criação de um novo banco.
+    │   ├── SKUSeller2SKUArmazem.py         # Associação dos códigos do armazem com os códigos de venda
+    │   ├── Corrige_CustoUP.py              # Atualização dos custos analizados com os encontrados no armazem
+    │   └── Dados_vendas.py                 # Criação do banco de dados para calculo das vendas e valores importantes.
+    │
+    ├── requirements.txt
+    └── README.md
+
+
 # Como Executar o Projeto
 
 1. Clonar o repositório
