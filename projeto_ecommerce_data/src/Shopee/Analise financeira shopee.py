@@ -91,6 +91,7 @@ def main():
                                                 'Nome do Anúncio':dadosDeCusto['Nome do Anúncio'].astype(str),\
                                                 'SKU (Armazém)':dadosDeCusto['SKU (Armazém)'].astype(str),\
                                                 'Custo Médio':dadosDeCusto['Custo Médio'].astype(float)})
+    
     #inserção dos custos no conjunto de dados de pedidos
     custos = insere_custo(dadosFiltrados, dadosFiltrados_custo)
     dadosFiltrados["Custo Unitário"] = custos
@@ -101,8 +102,31 @@ def main():
     dadosFiltrados_reset = dadosFiltrados.reset_index()
     #retiramos a coluna com os indices anteriores
     dadosFiltradosNovos  = dadosFiltrados_reset.drop("index", axis = 1)
-    #____________________________________Bloco calculo dos valores copnsiderados na ultima finalizacao______________________________________________
     
+    #____________________________________Bloco calculo dos valores copnsiderados na ultima finalizacao______________________________________________
+    verifica_ID = dados_para_analise(dadosFiltradosNovos)
+    nao_existem = dadosIdConsiderados.loc[~dadosIdConsiderados["ID do pedido (anterior)"].isin(verifica_ID["ID do pedido"]),"ID do pedido (anterior)"]
+    #base com os dados a mais que desejamos.
+    baseAmais = dadosFiltrados[dadosFiltrados['ID do pedido'].isin(nao_existem)]
+    #criação dos bancos que precisamos
+    duplicaAmais = banco_duplicado(baseAmais)
+    semduplicaAmais = banco_sem_duplas(baseAmais)
+    first_aparicao = primeiros_duplicado(baseAmais)
+    #receita anterior
+    receita_ant = receita(baseAmais)
+    #imposto anterior contabilizado
+    imposto_ant = receita_ant*0.1*0.0924
+    #custo anterior considerado
+    custoAntFinal = custo(baseAmais)
+    #calculo da comissão da shopee dos duplicados e sem duplicar
+    comissaoAntFinal = comissao_shopee(semduplicaAmais) + comissao_shopee(first_aparicao)
+    #Taxa de Transação dos duplicados e sem duplicar
+    taxaTransacaoAntFinal = taxa_transacao(semduplicaAmais) + taxa_transacao(first_aparicao)
+    #Taxa de Serviço dos duplicados e sem duplicar
+    taxaDeServicoAntFinal = taxa_servico(semduplicaAmais) + taxa_servico(first_aparicao)
+    #Valor do Frete dos duplicados e sem duplicar
+    freteAntFinal =  frete(semduplicaAmais) + frete(first_aparicao)
+
     #____________________________________Bloco para calculo dos valores que estão mais atuais_______________________________________________________
     
     #____________________________________Escrita dos arquivos de verificação externa________________________________________________________________
