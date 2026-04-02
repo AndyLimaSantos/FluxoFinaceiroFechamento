@@ -57,18 +57,18 @@ def main():
     # 2° dados dos custos que tivemos no mês
     # 3° dados de SKU, a relação existentes
     # 4° dados de ID considerados anteriormente
-    nome_pedidos = str(input())
-    nome_custo = str(input())
-    nomeSKU = str(input())
-    nome_ID = str(input())
+    #nome_pedidos = str(input())
+    #nome_custo = str(input())
+    #nomeSKU = str(input())
+    #nome_ID = str(input())
     #dados de pedidos
-    dadosDePedidos =  pd.read_excel(f"{nome_pedidos}.xlsx")
+    dadosDePedidos =  pd.read_excel(f"Order_all.xlsx")
     #dados de custo
-    dadosDeCusto = pd.read_excel(f"{nome_custo}.xlsx")
+    dadosDeCusto = pd.read_excel(f"Export_Order_eletronico.xlsx")
     #dados de SKU2SKU Armazem
-    dadosSKU2SKUA = pd.read_excel(f"{nomeSKU}.xlsx")
+    dadosSKU2SKUA = pd.read_excel(f"SKU2SKUArmazem.xlsx")
     #dados de ID Considerados
-    dadosIdConsiderados = pd.read_excel(f"{nome_ID}.xlsx") 
+    dadosIdConsiderados = pd.read_excel(f"ID_anterior_considerado.xlsx") 
     #filtro das colunas que desejamos
     dadosFiltrados = pd.DataFrame(data = {'ID do pedido':dadosDePedidos['ID do pedido'].astype(str),\
                                           'Status do pedido':dadosDePedidos['Status do pedido'].astype(str),\
@@ -105,7 +105,8 @@ def main():
     
     #____________________________________Bloco calculo dos valores copnsiderados na ultima finalizacao______________________________________________
     verifica_ID = dados_para_analise(dadosFiltradosNovos)
-    nao_existem = dadosIdConsiderados.loc[~dadosIdConsiderados["ID do pedido (anterior)"].isin(verifica_ID["ID do pedido"]),"ID do pedido (anterior)"]
+    nao_existem = dadosIdConsiderados.loc[~dadosIdConsiderados["ID do pedido (anterior)"].isin(verifica_ID["ID do pedido"]),\
+        "ID do pedido (anterior)"]
     #base com os dados a mais que desejamos.
     baseAmais = dadosFiltrados[dadosFiltrados['ID do pedido'].isin(nao_existem)]
     #criação dos bancos que precisamos
@@ -128,7 +129,50 @@ def main():
     freteAntFinal =  frete(semduplicaAmais) + frete(first_aparicao)
 
     #____________________________________Bloco para calculo dos valores que estão mais atuais_______________________________________________________
+    duplicados = banco_duplicado(dadosFiltradosNovos) #Esse devemos ter um olhar um pouco mais critico.
+    semDuplicatas = banco_sem_duplas(dadosFiltradosNovos) #Esse data frame contem os elementos não duplicados 
+    dataAnalise = dados_para_analise(semDuplicatas)
+    #analise dos duplicados
+    dataAnalise_Dupli = dados_para_analise(duplicados)
+    calculo_taxa_repe = primeiros_duplicado(dataAnalise_Dupli)
+    #calculo da receita
+    valor_receita = receita(dataAnalise) + receita(dataAnalise_Dupli)
+    #Calculo dos Impostos
+    imposto = valor_receita*0.1*0.0924
+    #calculo da comissão da shopee
+    comissaoShopee = comissao_shopee(dataAnalise) + comissao_shopee(calculo_taxa_repe)
+    #Taxa de Transação
+    taxaTransacao = taxa_transacao(dataAnalise) + taxa_transacao(calculo_taxa_repe)
+    #Taxa de Serviço
+    taxaServico = taxa_servico(dataAnalise) + taxa_servico(calculo_taxa_repe)
+    #Valor do Frete
+    valor_frete = frete(dataAnalise) + frete(calculo_taxa_repe)
+    #Custo
+    valor_custo = custo(dataAnalise) + custo(dataAnalise_Dupli)
     
     #____________________________________Escrita dos arquivos de verificação externa________________________________________________________________
+    print('Fechamento de pedidos considerados como return 0 no fechamento anterior')
+    print('--------------------------------------------')
+    print(f'Receita____________________________ {receita_ant:<15.2f}')
+    print(f'Impostsos__________________________ {imposto_ant:<15.2f}')
+    print(f'Frete______________________________ {freteAntFinal:<15.2f}')
+    print(f'Custo total________________________ {custoAntFinal:<15.2f}')
+    print(f'Comissão Shopee____________________ {comissaoAntFinal:<15.2f}')
+    print(f'Taxas de Transação_________________ {taxaTransacaoAntFinal:<15.2f}')
+    print(f'Taxa de Serviços da shopee_________ {taxaDeServicoAntFinal:<15.2f}')
+    print('--------------------------------------------')
+    print('Os valores acima devem ser corrigidos')
+    print('--------------------------------------------')
+    print('Fechamento final atual')
+    print('--------------------------------------------')
+    print(f'Receita____________________________ {valor_receita:<15.2f}')
+    print(f'Impostsos__________________________ {imposto:<15.2f}')
+    print(f'Frete______________________________ {valor_frete:<15.2f}')
+    print(f'Custo total________________________ {valor_custo:<15.2f}')
+    print(f'Comissão Shopee____________________ {comissaoShopee:<15.2f}')
+    print(f'Taxas de Transação_________________ {taxaTransacao:<15.2f}')
+    print(f'Taxa de Serviços da shopee_________ {taxaServico:<15.2f}')
+    print('--------------------------------------------')
+    
 if __name__ == "__main__":
     main()
