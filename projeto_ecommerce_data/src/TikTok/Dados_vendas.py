@@ -119,14 +119,15 @@ def data_devolucao(todos_pedidos, devolucao):
             data_devolucao.append("Não devolvido")
     return pd.DataFrame(data = {"Data de Devolução":data_devolucao})
 
-#Importação dos banco de dados criados para tratamento.
-data_todospedidos = pd.read_csv("todosPedidos.csv").drop("Unnamed: 0", axis = 1)
-data_CustoUP = pd.read_csv("CustoUP_final.csv").drop("Unnamed: 0", axis = 1)
-data_income = pd.read_csv("income.csv").drop("Unnamed: 0", axis = 1)
-data_devolucoes = pd.read_csv("devolucoes.csv").drop("Unnamed: 0", axis = 1)
 
 #Aplicação do main, para execução das tarefas
 def main():
+    #Importação dos banco de dados criados para tratamento.
+    data_todospedidos = pd.read_csv("todosPedidos.csv").drop("Unnamed: 0", axis = 1)
+    data_CustoUP = pd.read_csv("custoUP_final.csv").drop("Unnamed: 0", axis = 1)
+    data_income = pd.read_csv("income.csv").drop("Unnamed: 0", axis = 1)
+    data_devolucoes = pd.read_csv("devolucoes.csv").drop("Unnamed: 0", axis = 1)
+
     estimaTaxa = estimativa_taxa(data_todospedidos)
     estimaRecebe = estimativa_recebimento(data_todospedidos, estimaTaxa)
     custoUni=custo_unitario(data_todospedidos,data_CustoUP)
@@ -159,6 +160,6 @@ def main():
                                             "Mês de Recebimento":mesRecebimento["Mês de recebimento"],\
                                             "Data de Devolução":dataDevolucao["Data de Devolução"]})
     #Dados_vendas_final.to_excel("Dados de venda Final.xlsx")
-    Dados_vendas_final.to_csv("Dados de venda Final.csv")
+    Dados_vendas_final.to_csv("Dados_venda_final.csv")
 if __name__ == "__main__":
     main()

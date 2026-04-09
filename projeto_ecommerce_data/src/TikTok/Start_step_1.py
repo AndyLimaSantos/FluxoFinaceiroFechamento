@@ -62,10 +62,10 @@ exportOrder_filtro = pd.DataFrame(data = {'Pós-venda/Cancelado/Devolvido':expor
 #Escrevemos a planilha de devoluções
 devolucoes = incomeBase_filtro[incomeBase_filtro ['Valor total a ser liquidado']<0]
 
-#todosPedidosBase_filtro.to_csv('todosPedidos.csv')
-#incomeBase_filtro.to_csv('income.csv')
-#exportOrder_filtro.to_csv('custoUP.csv')
-#devolucoes.to_csv("devolucoes.csv")
+todosPedidosBase_filtro.to_csv('todosPedidos.csv')
+incomeBase_filtro.to_csv('income.csv')
+exportOrder_filtro.to_csv('custoUP_inicial.csv')
+devolucoes.to_csv("devolucoes.csv")
 
 
 #todosPedidosBase_filtro.to_excel('todosPedidos.xlsx')

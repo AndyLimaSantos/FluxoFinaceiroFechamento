@@ -37,8 +37,8 @@ def main():
     #Correção e inserção dos valores esperados
     dados = insere_SKU(dados_custoUP, dados_SKUArmazem)
     #Salvar a planilha:
-    custoUP_data.to_excel("custoUP.xlsx")
-    custoUP_data.to_csv("custoUP.csv")
+    #custoUP_data.to_excel("custoUP.xlsx")
+    custoUP_data.to_csv("custoUP_final.csv")
     return
 
 

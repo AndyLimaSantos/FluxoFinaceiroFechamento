@@ -56,4 +56,4 @@ SKU_mapeamento_atual = pd.DataFrame(data = {"SKU":sku_armazem_elementos,\
 
 #Exportação em .csv ou .xlsx
 SKU_mapeamento_atual.to_csv("SKU2SKUarmazem.csv")
-SKU_mapeamento_atual.to_excel("SKU2SKUarmazem.xlsx")
+#SKU_mapeamento_atual.to_excel("SKU2SKUarmazem.xlsx")
