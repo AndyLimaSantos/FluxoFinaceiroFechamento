@@ -29,7 +29,7 @@ def insere_SKU(custoUP, dados_SKUArmazem):
 def main():
     #Exportamos os bancos de dados que queremos trabalhar 
     dados_income = pd.read_csv("income.csv").drop("Unnamed: 0", axis =1)
-    dados_custoUP = pd.read_csv("custoUP.csv").drop("Unnamed: 0", axis =1)
+    dados_custoUP = pd.read_csv("custoUP_inicial.csv").drop("Unnamed: 0", axis =1)
     dados_todosPedidos = pd.read_csv("todosPedidos.csv").drop("Unnamed: 0", axis =1)
     dados_devolucoes = pd.read_csv("devolucoes.csv").drop("Unnamed: 0", axis =1)
     dados_SKUArmazem = pd.read_csv("SKU2SKUarmazem.csv").drop("Unnamed: 0", axis =1)
@@ -38,7 +38,7 @@ def main():
     dados = insere_SKU(dados_custoUP, dados_SKUArmazem)
     #Salvar a planilha:
     #custoUP_data.to_excel("custoUP.xlsx")
-    custoUP_data.to_csv("custoUP_final.csv")
+    dados.to_csv("custoUP_final.csv")
     return
 
 

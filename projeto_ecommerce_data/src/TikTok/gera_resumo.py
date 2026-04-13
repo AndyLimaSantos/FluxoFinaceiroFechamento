@@ -2,6 +2,7 @@
 import pandas as pd
 #importação do banco de dados utilizado
 data_vendas_final = pd.read_csv("Dados_venda_final.csv").drop("Unnamed: 0", axis = 1)
+#data_vendas_anteriror = pd.read_csv("Dados_venda_final.csv").drop("Unnamed: 0", axis = 1)
 #Funções que aplicaremos
 #__________________________________________Receitas Obtidas____________________________________
 def correção_estima_taxa(todos_pedidos): #Só para construção do resumo.
@@ -60,8 +61,10 @@ def devolucoes_TK(data_vendas):
     devolução_aDepositar = {separa_per_status: grupo for separa_per_status, grupo in aDepositar.groupby('Data de Devolução')}
     devolucao_depositado = {separa_per_status: grupo for separa_per_status, grupo in Depositado.groupby('Data de Devolução')}
     chaves_adeposita = list(devolução_aDepositar.keys())
+    print(chaves_adeposita)
     chaves_adeposita.remove('Não devolvido')
     chaves_depositado = list(devolucao_depositado.keys())
+    print(chaves_depositado)
     chaves_depositado.remove('Não devolvido')
     for i in range(len(chaves_adeposita)):
         valor = devolução_aDepositar[chaves_adeposita[i]]["Estimativa de Taxa"].sum()
@@ -116,9 +119,13 @@ lucroLiquidooperacional = receita_liquida - comicaoTk + devolucoesComissao
 lucroBruto = lucroLiquidooperacional + devolucoesCusto + ajuste - custo_de_venda
 
 #escrita do Resumo da loja
-nome_loja = "Hangar Gloria"
+print("Insira o nome da loja que estamos calculando")
+nome_loja = str(input())
+print("Insira o nome do mes de calculo")
+mes = str(input())
+
 with open(f'Resumo_ {nome_loja}.txt', 'a', encoding='utf-8') as f:
-    f.write(f'Resumo da loja {nome_loja} período dez 2025 até fev 2026\n')
+    f.write(f'Resumo da loja {nome_loja} período {mes}\n')
     f.write(f'_________________________________________\n')
     f.write(f'Receita de Venda                 {receitaDevenda:<30.2f}\n')
     f.write(f'Vendas que sofreram devolução    {-despesaDeVenda:>30.2f}\n')

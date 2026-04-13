@@ -46,7 +46,7 @@ def custo_unitario(todos_pedidos, custo_up):
             for k in range(len(indice_local)):
                 produto = custo_up.loc[indice_local[k],"SKU"]
                 elementos[produto] = custo_up.loc[indice_local[k],"Custo Médio"]
-            custo_unitario.append(elementos[sku_venda])
+            custo_unitario.append(elementos[produto])
         else:
             custo_unitario.append(0)
     return pd.DataFrame(data = {"Custo Unitario":custo_unitario}) 
@@ -137,7 +137,7 @@ def main():
     custoTot = custo_total(data_todospedidos, custoUni)
     valorLucro = lucro_bruto_real(valorRealLiquidado,custoTot)
     lucroMargem = margem_de_lucro(data_todospedidos,valorLucro)
-    diferença = diferenca(valorRealLiquidado , estimaRecebe)
+    difere = diferenca(valorRealLiquidado , estimaRecebe)
     dataDeposito = data_deposito(data_todospedidos, data_income)
     mesRecebimento = mes_recebimento(dataDeposito)
     dataDevolucao = data_devolucao(data_todospedidos, data_devolucoes)
@@ -146,20 +146,20 @@ def main():
     Dados_vendas_final = pd.DataFrame(data = {"Order ID":data_todospedidos["Order ID"].astype(str),\
                                             "Package ID":data_todospedidos["Package ID"].astype(str),\
                                             "SKU Subtotal After Discount":data_todospedidos["SKU Subtotal After Discount"],\
-                                            "Estimativa de Taxa":estima_taxa["Estimativa de Taxa"],\
-                                            "Estimativa de Recebimento":estima_recebe["Estimativa de Recebimento"],\
-                                            "Custo Unitário":custo_uni["Custo Unitario"],\
+                                            "Estimativa de Taxa":estimaTaxa["Estimativa de Taxa"],\
+                                            "Estimativa de Recebimento":estimaRecebe["Estimativa de Recebimento"],\
+                                            "Custo Unitário":custoUni["Custo Unitario"],\
                                             "Lucro Estimado":lucro_estima["Lucro Estimado"],\
                                             "Status":status["Status"],\
-                                            "Valor Real Depositado":valor_real_liquidado["Valor Real Depositado"],\
-                                            "Custo Total":custo_tot["Custo Total"],\
-                                            "Lucro Bruto Real":valor_lucro["Lucro Bruto Real"],\
-                                            "Margem de Lucro":lucro_margem["Margem de Lucro"],\
-                                            "Diferênça":diferenca_valor["Diferença"],\
+                                            "Valor Real Depositado":valorRealLiquidado["Valor Real Depositado"],\
+                                            "Custo Total":custoTot["Custo Total"],\
+                                            "Lucro Bruto Real":valorLucro["Lucro Bruto Real"],\
+                                            "Margem de Lucro":lucroMargem["Margem de Lucro"],\
+                                            "Diferênça":difere["Diferença"],\
                                             "Data De Deposito":dataDeposito["Data de deposito"],\
                                             "Mês de Recebimento":mesRecebimento["Mês de recebimento"],\
                                             "Data de Devolução":dataDevolucao["Data de Devolução"]})
-    #Dados_vendas_final.to_excel("Dados de venda Final.xlsx")
+    Dados_vendas_final.to_excel("Dados_venda_final.xlsx")
     Dados_vendas_final.to_csv("Dados_venda_final.csv")
 if __name__ == "__main__":
     main()

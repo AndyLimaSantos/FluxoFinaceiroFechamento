@@ -25,9 +25,12 @@ def modifica_corrige_package(coluna):
     coluna_filtro2 = coluna_filtro1.astype(str)
     coluna_filtro3 = coluna_filtro2.replace('', 'Cancelado', regex=False)
     return coluna_filtro3
-# Importação dos dados brutos que utilizares e iremos limpar.
+# Importacao dados brutos todas as lojas
+print("insira o nome do arquivo com todos os pedidos")
 nome_pedidos = str(input())
+print("insira o nome do arquivo income")
 nome_income = str(input())
+print("insira o nome do arquivo export order")
 nome_exportOrder = str(input())
 
 todosPedidosBase = pd.read_csv(nome_pedidos)
@@ -42,23 +45,27 @@ todosPedidosBase['Package ID'] = modifica_corrige_package(todosPedidosBase['Pack
 
 #Eliminamos as colunas que não queremos escrevendo novos bancos de dados para os pedidos
 #Eliminamos as colunas que não queremos escrevendo novos bancos de dados para os pedidos
-todosPedidosBase_filtro = pd.DataFrame(data = {'Package ID':todosPedidosBase['Package ID'],\
+todosPedidosBase_filtro = pd.DataFrame(data = {'Order ID':todosPedidosBase['Order ID'].astype(str),\
+                                               'Package ID':todosPedidosBase['Package ID'].astype(str),\
                                                'Quantity':todosPedidosBase['Quantity'].astype(int),\
                                                'SKU Subtotal After Discount':todosPedidosBase['SKU Subtotal After Discount'],\
                                                'SKU Unit Original Price':todosPedidosBase['SKU Unit Original Price'],\
                                                'SKU Subtotal Before Discount':todosPedidosBase['SKU Subtotal Before Discount'],\
                                                'Sku Quantity of return':todosPedidosBase['Sku Quantity of return'].astype(int),\
                                                'Seller SKU':todosPedidosBase['Seller SKU'].astype(str)})
+
 #Escrevemos um novo banco de dados para o Income
 incomeBase_filtro = pd.DataFrame(data = {'ID do pedido/ajuste':incomeBase['ID do pedido/ajuste'].astype(str),\
                                          'Valor total a ser liquidado':incomeBase['Valor total a ser liquidado'].astype(float),\
                                          'Data do demonstrativo':incomeBase['Data do demonstrativo']})
+
 #Escrevemos um novo banco de dados para o Export Order
 exportOrder_filtro = pd.DataFrame(data = {'Pós-venda/Cancelado/Devolvido':exportOrderBase['Pós-venda/Cancelado/Devolvido'].fillna("Ocorreu").astype(str),\
                                           'Nº de Pedido da Plataforma':exportOrderBase['Nº de Pedido da Plataforma'].astype(str),\
                                           'Custo Médio':exportOrderBase['Custo Médio'].astype(float),\
-                                          'SKU':exportOrderBase['SKU'],\
-                                          'SKU (Armazém)':exportOrderBase['SKU (Armazém)']})
+                                          'SKU':exportOrderBase['SKU'].astype(str),\
+                                          'SKU (Armazém)':exportOrderBase['SKU (Armazém)'].astype(str)})
+
 #Escrevemos a planilha de devoluções
 devolucoes = incomeBase_filtro[incomeBase_filtro ['Valor total a ser liquidado']<0]
 
