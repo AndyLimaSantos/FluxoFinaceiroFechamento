@@ -2,6 +2,9 @@
 import pandas as pd
 #importação do banco de dados utilizado
 data_vendas_final = pd.read_csv("Dados_venda_final.csv").drop("Unnamed: 0", axis = 1)
+print("Insira o nome com os dados das amostras")
+amostras = str(input())
+data_amostras = pd.read_csv(amostras)
 #data_vendas_anteriror = pd.read_csv("Dados_venda_final.csv").drop("Unnamed: 0", axis = 1)
 #Funções que aplicaremos
 #__________________________________________Receitas Obtidas____________________________________
@@ -33,6 +36,10 @@ def custo(data_vendas):
     taxa = float(depositado) + float(aDepositar)
     return taxa
 #__________________________________________Despesas Obtidas________________________________________
+def custoAmostras(data_amostras):
+    valor = float(data_amostras["Custo Total"].sum())
+    return valor
+
 def despesas_vendas(data_vendas):
     despesa = 0
     separa_per_status = {separa_per_status: grupo for separa_per_status, grupo in data_vendas_final.groupby('Status')}
@@ -114,9 +121,12 @@ devolucoesCusto = devolucoes_Custo(data_vendas_final) #custo de devolucao
 comicaoTk = comissao_tk(data_vendas_final) #Valor da Taxa de Comissão do TK
 custo_de_venda = custo(data_vendas_final)
 ajuste = ajustes(data_vendas_final)
+custo_amostra = custoAmostras(data_amostras)
 receita_liquida = receitaDevenda - despesaDeVenda
 lucroLiquidooperacional = receita_liquida - comicaoTk + devolucoesComissao
-lucroBruto = lucroLiquidooperacional + devolucoesCusto + ajuste - custo_de_venda
+lucroBruto = lucroLiquidooperacional + devolucoesCusto + ajuste - custo_de_venda - custo_amostra
+custo_amostra = custoAmostras(data_amostras)
+
 
 #escrita do Resumo da loja
 print("Insira o nome da loja que estamos calculando")
@@ -137,6 +147,7 @@ with open(f'Resumo_ {nome_loja}.txt', 'a', encoding='utf-8') as f:
     f.write(f'_________________________________________\n')
     f.write(f'Lucro Liquido Operacional        {lucroLiquidooperacional:^30.2f}\n')
     f.write(f'\n')
+    f.write(f'Custo amostras                   {-custo_amostra:>30.2f}\n')
     f.write(f'Custo das vendas                 {-custo_de_venda:>30.2f}\n')
     f.write(f'Devolução do Custo               {devolucoesCusto:<30.2f}\n')
     if ajuste >= 0:

@@ -47,6 +47,11 @@ todosPedidosBase['Package ID'] = modifica_corrige_package(todosPedidosBase['Pack
 #Eliminamos as colunas que não queremos escrevendo novos bancos de dados para os pedidos
 todosPedidosBase_filtro = pd.DataFrame(data = {'Order ID':todosPedidosBase['Order ID'].astype(str),\
                                                'Package ID':todosPedidosBase['Package ID'].astype(str),\
+                                               'Seller SKU':todosPedidosBase['Seller SKU'].astype(str),\
+                                               'Product Name':todosPedidosBase['Product Name'].astype(str),\
+                                               'Variation':todosPedidosBase['Variation'].astype(str),\
+                                               'Product Category':todosPedidosBase['Product Category'].astype(str),\
+                                               'Cancel Reason':todosPedidosBase['Cancel Reason'].astype(int),\
                                                'Quantity':todosPedidosBase['Quantity'].astype(int),\
                                                'SKU Subtotal After Discount':todosPedidosBase['SKU Subtotal After Discount'],\
                                                'SKU Unit Original Price':todosPedidosBase['SKU Unit Original Price'],\

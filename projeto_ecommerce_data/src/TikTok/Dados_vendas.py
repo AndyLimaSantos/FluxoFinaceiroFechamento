@@ -141,7 +141,7 @@ def main():
     dataDeposito = data_deposito(data_todospedidos, data_income)
     mesRecebimento = mes_recebimento(dataDeposito)
     dataDevolucao = data_devolucao(data_todospedidos, data_devolucoes)
-    #Produção do novo banco de dados com os indicadores que precisamos, 
+    #Producao do novo banco de dados com os indicadores que precisamos, 
     #para fazer o resumo que desejamos
     Dados_vendas_final = pd.DataFrame(data = {"Order ID":data_todospedidos["Order ID"].astype(str),\
                                             "Package ID":data_todospedidos["Package ID"].astype(str),\
