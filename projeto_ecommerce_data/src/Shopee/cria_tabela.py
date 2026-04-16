@@ -13,7 +13,7 @@ income_data = pd.read_excel(nome_income, header=2, sheet_name="Income") #Ele peg
 print("Insira o nome do arquivo que contem todos os pedidos")
 nome_ExportOrder = str(input())
 exportOrder_data = pd.read_excel(nome_ExportOrder)
-#Filtro dos dados que queremos 
+#criação do banco de dados para analisar
 dadosFiltrados = pd.DataFrame(data = {'ID do pedido':todosPedidos_data['ID do pedido'].astype(str),\
                                       'Status do pedido':todosPedidos_data['Status do pedido'].astype(str),\
                                       'Nome do Produto':todosPedidos_data['Nome do Produto'].astype(str),\
@@ -40,7 +40,11 @@ dadosFiltroOrder = pd.DataFrame(data = {'Nº de Pedido da Plataforma':exportOrde
                                         'Custo Médio':exportOrder_data['Custo Médio'],\
                                         'SKU':exportOrder_data['SKU'],\
                                         'SKU (Armazém)':exportOrder_data['SKU (Armazém)']})
+
+devolucoes = dadosFiltroIncome[dadosFiltroIncome['Total Released Amount (R$)'] < 0]
+
 #Exportacao de dados em arquivos csv
 dadosFiltrados.to_csv("todosPedidos.csv")
 dadosFiltroIncome.to_csv("income.csv")
 dadosFiltroOrder.to_csv("custoUP.csv")
+devolucoes.to_csv("devolucoes.csv")
