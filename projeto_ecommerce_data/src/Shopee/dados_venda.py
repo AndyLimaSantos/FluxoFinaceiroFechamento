@@ -146,25 +146,25 @@ def main():
     frete = frete_pago(totalPedidos)
 
     Dados_vendas_final = pd.DataFrame(data = {"Order ID":totalPedidos["ID do pedido"].astype(str),\
-                                            "SKU Subtotal After Discount":(totalPedidos["Preço original"] - totalPedidos["Desconto do vendedor"]),\
-                                            "Estimativa de Recebimento":estima_recebe["Estimativa de Recebimento"],\
-                                            "Custo Unitário":custo_uni["Custo Unitario"],\
-                                            "Frete":frete["Frete"],\
-                                            "Lucro Estimado":lucro_estima["Lucro Estimado"],\
+                                            "SKU Subtotal After Discount":(totalPedidos["Preço original"] - totalPedidos["Desconto do vendedor"]).astype(float),\
+                                            "Estimativa de Recebimento":estima_recebe["Estimativa de Recebimento"].astype(float),\
+                                            "Custo Unitário":custo_uni["Custo Unitario"].astype(float),\
+                                            "Frete":frete["Frete"].astype(float),\
+                                            "Lucro Estimado":lucro_estima["Lucro Estimado"].astype(float),\
                                             "Status":status["Status"],\
-                                            "Valor Real Depositado":valor_real["Valor Real Depositado"],\
-                                            "Custo Total":custo_tot["Custo Total"],\
-                                            "Lucro Bruto Real":lucro_bruto["Lucro Bruto Real"],\
-                                            "Margem de Lucro":margem["Margem de Lucro"],\
-                                            "Diferênça":difere["Diferença"],\
+                                            "Valor Real Depositado":valor_real["Valor Real Depositado"].astype(float),\
+                                            "Custo Total":custo_tot["Custo Total"].astype(float),\
+                                            "Lucro Bruto Real":lucro_bruto["Lucro Bruto Real"].astype(float),\
+                                            "Margem de Lucro":margem["Margem de Lucro"].astype(float),\
+                                            "Diferênça":difere["Diferença"].astype(float),\
                                             "Data De Deposito":dataDeposito["Data de deposito"],\
                                             "Mês de Recebimento":mes["Mês de recebimento"],\
                                             "Data de Devolução":devolucoes["Data de Devolução"],\
-                                            'Taxa de comissão bruta':totalPedidos['Taxa de comissão bruta'],\
-                                            'Taxa de serviço bruta':totalPedidos['Taxa de serviço bruta'],\
-                                            'Taxa de Envio Reversa':totalPedidos['Taxa de Envio Reversa'],\
-                                            'Taxa de transação':totalPedidos['Taxa de transação'],\
-                                            "Estimativa de Taxa":estima_taxa["Estimativa de Taxa"]
+                                            'Taxa de comissão bruta':totalPedidos['Taxa de comissão bruta'].astype(float),\
+                                            'Taxa de serviço bruta':totalPedidos['Taxa de serviço bruta'].astype(float),\
+                                            'Taxa de Envio Reversa':totalPedidos['Taxa de Envio Reversa'].astype(float),\
+                                            'Taxa de transação':totalPedidos['Taxa de transação'].astype(float),\
+                                            "Estimativa de Taxa":estima_taxa["Estimativa de Taxa"].astype(float)
                                             })
     Dados_vendas_final.to_excel("Dados_venda_final.xlsx")
     Dados_vendas_final.to_csv("Dados_venda_final.csv")
