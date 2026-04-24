@@ -6,12 +6,9 @@ from datetime import datetime
 
 #####################################sao as funcoes que utiliza das planilhas de base apenas###############################
 def estimativa_taxa(todos_pedidos): #############################Essa taxa não me parece estar correta###############################
-    return pd.DataFrame(data = {"Estimativa de Taxa":(todos_pedidos['Desconto de Frete Aproximado']-\
-                                                             todos_pedidos['Taxa de transação']-\
-                                                             todos_pedidos['Taxa de comissão bruta']-\
-                                                             todos_pedidos['Taxa de serviço bruta']-\
-                                                             todos_pedidos['Valor estimado do frete']-\
-                                                             todos_pedidos['Coin Cashback Voucher Amount Sponsored by Seller'])})
+    return pd.DataFrame(data = {"Estimativa de Taxa":(todos_pedidos['Taxa de transação']+\
+                                                        todos_pedidos['Taxa de comissão bruta']+\
+                                                        todos_pedidos['Taxa de serviço bruta'])})
 def custo_unitario(todos_pedidos, custo_up): ### usa as planilhas ##########################Feito###############################
     #ele não enontra alguns valores no custo UP, acredito que seja pq o custo UP não esta pegando todos os pedidos.
     #as datas de criação não esta no dentro do intervalo do sdadoa do upseller
