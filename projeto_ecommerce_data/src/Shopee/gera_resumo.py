@@ -115,12 +115,18 @@ def devolucoes_Custo(data_vendas):
     return despesa
 
 #Ajuste ----------------------------------------------------------------------------
-def ajustes(data_vendas):
+def ajustes(data_vendas, correcao): #ele não pode pegar a coluna inteira, o motivo é que senão ele pega taxas repetidas, aumentando assim o valor dado
     separa_per_status = {separa_per_status: grupo for separa_per_status, grupo in data_vendas.groupby('Status')}
     depositado = separa_per_status["Depositado"]
     separa_per_datadevolucao = {separa_per_status: grupo for separa_per_status, grupo in depositado.groupby('Data de Devolução')}
+
+    separa_per_status2 = {separa_per_status: grupo for separa_per_status, grupo in correcao.groupby('Status')}
+    depositado2 = separa_per_status2["Depositado"]
+    separa_per_datadevolucao2 = {separa_per_status2: grupo for separa_per_status2, grupo in depositado2.groupby('Data de Devolução')}
+    
     ajuste = separa_per_datadevolucao["Não devolvido"]["Diferênça"].sum()
-    return float(ajuste)
+    ajuste2 = separa_per_datadevolucao2["Não devolvido"]["SKU Subtotal After Discount"].sum()
+    return float(ajuste - ajuste2)
 
 def frete(data_vendas):
     return float(data_vendas["Frete"].sum())
@@ -129,6 +135,7 @@ def main():
     #importação dos dados que desejamos
     data_vendas_final = pd.read_csv("Dados_venda_final.csv").drop("Unnamed: 0", axis = 1)
     dadoSemDuplicacao = data_vendas_final[data_vendas_final["Order ID"].duplicated() == False]
+    dadosDuplicados = data_vendas_final[data_vendas_final["Order ID"].duplicated() == True]
     # Receita de Venda ----------------------------------------------------------------
     receita = receita_vendas(data_vendas_final)
     receitaRetornada = despesas_vendas(data_vendas_final)
@@ -138,7 +145,7 @@ def main():
     taxaDenvio = taxa_envio_reversa(dadoSemDuplicacao)    
     taxaDtransacao = taxa_transacao(dadoSemDuplicacao)
     estimativaComicao = comissao_SH(dadoSemDuplicacao)
-    frete_pago = frete(data_vendas_final)
+    frete_pago = frete(dadoSemDuplicacao)
     # Devolucoes -----------------------------------------------------------------
     devolucaoTaxa = devolucoes_SH(dadoSemDuplicacao)
     devolucaoProduto = devolucoes_Custo(data_vendas_final)
@@ -147,7 +154,7 @@ def main():
     custoProduto = custo(data_vendas_final)
 
     #Ajuste ----------------------------------------------------------------------------
-    valorAjustado = ajustes(data_vendas_final)
+    valorAjustado = ajustes(dadoSemDuplicacao,dadosDuplicados)
 
 
 

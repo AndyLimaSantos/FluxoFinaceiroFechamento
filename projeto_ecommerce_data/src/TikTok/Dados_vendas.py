@@ -22,15 +22,17 @@ def lucro_bruto_real(valor_real, custo_total):
     lucro = pd.DataFrame(data = {"Lucro Bruto Real":(valor_real["Valor Real Depositado"]-custo_total["Custo Total"])})
     lucro[lucro["Lucro Bruto Real"]<0] = 0
     return lucro
-def margem_de_lucro(todos_pedidos, lucro_bruto):
-    return pd.DataFrame(data = {"Margem de Lucro":(lucro_bruto["Lucro Bruto Real"]/todos_pedidos['SKU Subtotal Before Discount'])})
+
+def margem_de_lucro(todos_pedidos, lucro_bruto): #Corrigir para Subtotal after discount
+    return pd.DataFrame(data = {"Margem de Lucro":(lucro_bruto["Lucro Bruto Real"]/todos_pedidos['SKU Subtotal After Discount'])})
+
 def correção_estima_taxa(todos_pedidos): #Só para construção do resumo.
     numero_pedidos = data_todospedidos["Package ID"].nunique() - 1
     taxa_por_pedido =  numero_pedidos*4
     return taxa_por_pedido
 def lucro_estimado(estima_recebe, custo_uni):
     return pd.DataFrame(data = {"Lucro Estimado":(estima_recebe["Estimativa de Recebimento"]\
-                                                  - custo_uni["Custo Unitario"])})
+                                                  - custo_uni["Custo Unitario"])}) #Aqui deveria ser o Custo Total
 def custo_unitario(todos_pedidos, custo_up):
     #ele não enontra alguns valores no custo UP, acredito que seja pq o custo UP não esta pegando todos os pedidos.
     #as datas de criação não esta no dentro do intervalo do sdadoa do upseller
@@ -50,6 +52,7 @@ def custo_unitario(todos_pedidos, custo_up):
         else:
             custo_unitario.append(0)
     return pd.DataFrame(data = {"Custo Unitario":custo_unitario}) 
+
 def status_pedidos(todos_pedidos, income):
     linha = todos_pedidos.shape[0]
     status = []
@@ -66,6 +69,7 @@ def status_pedidos(todos_pedidos, income):
         elif presenca > 0:
             status.append("Depositado")
     return pd.DataFrame(data = {"Status":status})
+
 def valor_real_depositado(todos_pedidos, income):
     valor_real = []
     n_linhas =todos_pedidos.shape[0]
@@ -78,6 +82,7 @@ def valor_real_depositado(todos_pedidos, income):
         else:
             valor_real.append(0)
     return pd.DataFrame(data = {"Valor Real Depositado":valor_real})
+
 def data_deposito(todos_pedidos, income):
     linhas = todos_pedidos.shape[0]
     data_deposito = []
@@ -91,6 +96,7 @@ def data_deposito(todos_pedidos, income):
             data  = income.loc[indices[0],'Data do demonstrativo']
             data_deposito.append(data)
     return pd.DataFrame(data = {"Data de deposito": data_deposito})
+
 def mes_recebimento(data_deposito):
     linhas = data_deposito.shape[0]
     meses = []
@@ -103,6 +109,7 @@ def mes_recebimento(data_deposito):
         if d == "A depositar":
             meses.append(0)
     return pd.DataFrame(data = {"Mês de recebimento":meses})
+
 def data_devolucao(todos_pedidos, devolucao):
     linhas = todos_pedidos.shape[0]
     data_devolucao = []

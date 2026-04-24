@@ -5,12 +5,14 @@ from datetime import datetime
 #Funaoes que iremos utilizar para criacao das novas colunas.
 
 #####################################sao as funcoes que utiliza das planilhas de base apenas###############################
-def estimativa_taxa(todos_pedidos): #usa as tabelas ###### Verificar isso aqui, nao parece fazer sentido ########
-    return pd.DataFrame(data = {"Estimativa de Taxa":(todos_pedidos['Taxa de comissão bruta']+\
-                                                      todos_pedidos['Taxa de serviço bruta']+\
-                                                      todos_pedidos['Taxa de Envio Reversa']+\
-                                                      todos_pedidos['Taxa de transação'])})
-def custo_unitario(todos_pedidos, custo_up): ### usa as planilhas ########Feito##########
+def estimativa_taxa(todos_pedidos): #############################Essa taxa não me parece estar correta###############################
+    return pd.DataFrame(data = {"Estimativa de Taxa":(todos_pedidos['Desconto de Frete Aproximado']-\
+                                                             todos_pedidos['Taxa de transação']-\
+                                                             todos_pedidos['Taxa de comissão bruta']-\
+                                                             todos_pedidos['Taxa de serviço bruta']-\
+                                                             todos_pedidos['Valor estimado do frete']-\
+                                                             todos_pedidos['Coin Cashback Voucher Amount Sponsored by Seller'])})
+def custo_unitario(todos_pedidos, custo_up): ### usa as planilhas ##########################Feito###############################
     #ele não enontra alguns valores no custo UP, acredito que seja pq o custo UP não esta pegando todos os pedidos.
     #as datas de criação não esta no dentro do intervalo do sdadoa do upseller
     #Mas esta correto
@@ -71,11 +73,18 @@ def data_deposito(todos_pedidos, income):  #usa as tabelas  ########Feito#######
             data_deposito.append(data)
     return pd.DataFrame(data = {"Data de deposito": data_deposito})
 
+
 ################sao as funcoes que utiliza das planilhas de base e dos valores criados com outras funcoes#####################
-def estimativa_recebimento(todos_pedidos, estima_taxa):
-    return pd.DataFrame(data  = {"Estimativa de Recebimento":(todos_pedidos['Preço original']-\
-                                                              todos_pedidos['Desconto do vendedor'])-\
-                                        estima_taxa["Estimativa de Taxa"]})
+def estimativa_recebimento(todos_pedidos):
+    return pd.DataFrame(data  = {"Estimativa de Recebimento":todos_pedidos['Subtotal do produto']-\
+                                                             todos_pedidos['Cupom do vendedor']+\
+                                                             todos_pedidos['Taxa de envio pagas pelo comprador']+\
+                                                             todos_pedidos['Desconto de Frete Aproximado']-\
+                                                             todos_pedidos['Taxa de transação']-\
+                                                             todos_pedidos['Taxa de comissão bruta']-\
+                                                             todos_pedidos['Taxa de serviço bruta']-\
+                                                             todos_pedidos['Valor estimado do frete']-\
+                                                             todos_pedidos['Coin Cashback Voucher Amount Sponsored by Seller']})
 def diferenca(valor_real, estima_recebe):
     return pd.DataFrame(data = {"Diferença":(valor_real["Valor Real Depositado"]\
                                              - estima_recebe["Estimativa de Recebimento"])})
@@ -90,9 +99,9 @@ def margem_de_lucro(todos_pedidos, lucro_bruto,estima_taxa):
                                                    (todos_pedidos['Preço original']-\
                                                    todos_pedidos['Desconto do vendedor']-\
                                                    estima_taxa["Estimativa de Taxa"]))})
-def lucro_estimado(estima_recebe, custo_uni):
+def lucro_estimado(estima_recebe, custo_tot):
     return pd.DataFrame(data = {"Lucro Estimado":(estima_recebe["Estimativa de Recebimento"]\
-                                                  - custo_uni["Custo Unitario"])})
+                                                  - custo_tot["Custo Total"])})
 def mes_recebimento(data_deposito):
     linhas = data_deposito.shape[0]
     meses = []
@@ -121,7 +130,6 @@ def data_devolucao(todos_pedidos, devolucao):
             data_devolucao.append("Não devolvido")
     return pd.DataFrame(data = {"Data de Devolução":data_devolucao})
 def frete_pago(todos_pedidos):
-
     return pd.DataFrame(data = {"Frete":(todos_pedidos["Valor estimado do frete"]-todos_pedidos["Taxa de envio pagas pelo comprador"]-todos_pedidos["Desconto de Frete Aproximado"])})
 
 def main():
@@ -129,24 +137,28 @@ def main():
     custoUP = pd.read_csv("custoUP.csv")
     totalPedidos = pd.read_csv("todosPedidos.csv")
     devolucao = pd.read_csv("devolucoes.csv")
-
+    
+    #todos aqui foram verificados.
     estima_taxa = estimativa_taxa(totalPedidos)
     custo_uni = custo_unitario(totalPedidos, custoUP) #---- Ainda devolve algumas celulas sem valor
-    status = status_pedidos(totalPedidos, income) #------------- Não sei se é funcional considerar apenas os status dos pedidos e não verificar no income
+    status = status_pedidos(totalPedidos, income) 
     valor_real = valor_real_depositado(totalPedidos, income)
     dataDeposito = data_deposito(totalPedidos, income)
-    estima_recebe = estimativa_recebimento(totalPedidos, estima_taxa)
+    #todos aqui foram verificados.
+    estima_recebe = estimativa_recebimento(totalPedidos) #
     difere = diferenca(valor_real, estima_recebe)
     custo_tot = custo_total(totalPedidos, custo_uni)
+    #todos aqui foram verificados.
     lucro_bruto = lucro_bruto_real(valor_real, custo_tot)
     margem = margem_de_lucro(totalPedidos, lucro_bruto, estima_taxa)
-    lucro_estima = lucro_estimado(estima_recebe, custo_uni)
+    lucro_estima = lucro_estimado(estima_recebe, custo_tot)
+    #todos aqui foram verificados.
     mes = mes_recebimento(dataDeposito)
     devolucoes = data_devolucao(totalPedidos, devolucao)
     frete = frete_pago(totalPedidos)
 
     Dados_vendas_final = pd.DataFrame(data = {"Order ID":totalPedidos["ID do pedido"].astype(str),\
-                                            "SKU Subtotal After Discount":(totalPedidos["Preço original"] - totalPedidos["Desconto do vendedor"]).astype(float),\
+                                            "SKU Subtotal After Discount":(totalPedidos["Subtotal do produto"]).astype(float),\
                                             "Estimativa de Recebimento":estima_recebe["Estimativa de Recebimento"].astype(float),\
                                             "Custo Unitário":custo_uni["Custo Unitario"].astype(float),\
                                             "Frete":frete["Frete"].astype(float),\
