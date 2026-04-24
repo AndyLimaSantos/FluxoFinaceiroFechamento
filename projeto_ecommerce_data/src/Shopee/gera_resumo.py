@@ -121,12 +121,17 @@ def ajustes(data_vendas, correcao): #ele não pode pegar a coluna inteira, o mot
     separa_per_datadevolucao = {separa_per_status: grupo for separa_per_status, grupo in depositado.groupby('Data de Devolução')}
 
     separa_per_status2 = {separa_per_status: grupo for separa_per_status, grupo in correcao.groupby('Status')}
-    depositado2 = separa_per_status2["Depositado"]
-    separa_per_datadevolucao2 = {separa_per_status2: grupo for separa_per_status2, grupo in depositado2.groupby('Data de Devolução')}
-    
-    ajuste = separa_per_datadevolucao["Não devolvido"]["Diferênça"].sum()
-    ajuste2 = separa_per_datadevolucao2["Não devolvido"]["SKU Subtotal After Discount"].sum()
-    return float(ajuste - ajuste2)
+    chave = list(separa_per_status2.keys())
+    if "Depositado" not in chave:
+        ajuste = separa_per_datadevolucao["Não devolvido"]["Diferênça"].sum()
+        return float(ajuste)
+    if "Depositado" in chave:
+        depositado2 = separa_per_status2["Depositado"]
+        separa_per_datadevolucao2 = {separa_per_status2: grupo for separa_per_status2, grupo in depositado2.groupby('Data de Devolução')}
+        ajuste = separa_per_datadevolucao["Não devolvido"]["Diferênça"].sum()
+        ajuste2 = separa_per_datadevolucao2["Não devolvido"]["SKU Subtotal After Discount"].sum()
+        return float(ajuste - ajuste2)
+
 
 def frete(data_vendas):
     return float(data_vendas["Frete"].sum())

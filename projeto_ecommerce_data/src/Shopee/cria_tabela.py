@@ -6,7 +6,7 @@ print("Insira o nome do arquivo que contem todos os pedidos")
 nome_pedidos = str(input())
 todosPedidos_data = pd.read_excel(nome_pedidos)
 
-print("Insira o nome do arquivo Income)
+print("Insira o nome do arquivo Income")
 nome_income = str(input())
 income_data = pd.read_excel(nome_income, header=2, sheet_name="Income") #Ele pega a aba Income e começa a pegar apenas os valores a partir da 3linha
 
@@ -19,7 +19,7 @@ dadosFiltrados = pd.DataFrame(data = {'ID do pedido':todosPedidos_data['ID do pe
                                       'Nome do Produto':todosPedidos_data['Nome do Produto'].astype(str),\
                                       'Número de referência SKU':todosPedidos_data['Número de referência SKU'],\
                                       'Returned quantity':todosPedidos_data['Returned quantity'].astype(int),\
-                                      'Subtotal do produto':todosPedidos_data['Subrtotal do produto'].astype(float),\
+                                      'Subtotal do produto':todosPedidos_data['Subtotal do produto'].astype(float),\
                                       'Preço original':todosPedidos_data['Preço original'].astype(float),\
                                       'Desconto do vendedor':todosPedidos_data['Desconto do vendedor'].astype(float),\
                                       'Cupom do vendedor':todosPedidos_data['Cupom do vendedor'].astype(float),\
